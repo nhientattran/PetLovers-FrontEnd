@@ -37,13 +37,30 @@ import { fetchPets } from '../../api';
 import { serverCalls } from '../../api';
 
 interface FavoritePetProps {
-    pets: Pet[]
+    name: string;
+    photos: {
+        medium: string;
+        small: string
+    }[];
+    description: string;
+    breeds: {
+        primary: string;
+        secondary: string;
+    };
+    gender: string;
+    age: string;
+    size: string;
+    distance: string;
+    contact: string;
 }
 
-export const FavoritePet: React.FC<FavoritePetProps> = ({ pets }) => {
+
+
+
+export const FavoritePet: React.FC<FavoritePetProps> = () => {
     const navigate = useNavigate()
     const [ open, setOpen ] = useState(false)
-    const [favoritePets, setFavoritePets] = useState<Pet[]>([])
+    const [favoritePets, setFavoritePets] = useState<FavoritePetProps[]>([])
     const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({})
 
     const handleExpandClick = (petName:string) => {
@@ -117,9 +134,16 @@ export const FavoritePet: React.FC<FavoritePetProps> = ({ pets }) => {
     useEffect(() => {
         const fetchFavoritePets = async() => {
             try {
-                const favoritePets = await serverCalls.get()
-                setFavoritePets(favoritePets);
-                console.log(favoritePets);
+                const favoritePets:FavoritePetProps[] = await serverCalls.get()
+                const cleanedFavoritePets = favoritePets.map((pet) => ({
+                    ...pet,
+                    photos: pet.photos.map((photo) => ({
+                        medium:photo.medium.replace(/"/g, ""),
+                        small:photo.small.replace(/"/g, "")
+                    }))
+                }))
+                setFavoritePets(cleanedFavoritePets);
+                console.log(cleanedFavoritePets);
             } catch (error) {
                 console.error('Error fetching favorite pets:', error)
             }
@@ -190,7 +214,7 @@ export const FavoritePet: React.FC<FavoritePetProps> = ({ pets }) => {
                                         title={pet.name}
                                         subheader={pet.age} />
                                         
-                                        <CardMedia component='img' height='350' image={pet.photos[0].medium} alt={pet.name} />
+                                        <CardMedia component='img' height='350' image={pet.photos[0]?.medium} alt={pet.name} />
 
                                         {pet.description && (
                                             <CardContent>
@@ -198,7 +222,7 @@ export const FavoritePet: React.FC<FavoritePetProps> = ({ pets }) => {
                                                     {pet.description}
                                                 </Typography>
                                             </CardContent>
-                                        )}
+                                        )} 
                                         <CardContent>
                                             <CardActions disableSpacing>
                                                 <IconButton 
@@ -219,14 +243,23 @@ export const FavoritePet: React.FC<FavoritePetProps> = ({ pets }) => {
                                             </CardActions>
                                             <Collapse in={expanded[pet.name]} timeout='auto' unmountOnExit>
                                                 <CardContent>
-                                                    {pet.breeds && (
+                                                    {pet.breeds ? (
                                                         <>
-                                                        <Typography paragraph>Breed: {pet.breeds.primary}</Typography> 
+                                                        <Typography paragraph>Breed: {pet.breeds.primary} {pet.breeds.secondary} </Typography> 
                                                         <Typography paragraph>Gender: {pet.gender}</Typography>
                                                         <Typography paragraph>Size: {pet.size}</Typography>
                                                         <Typography paragraph>Contact:</Typography>
-                                                        <Typography paragraph>- Email: {pet.contact.email}</Typography>
-                                                        <Typography paragraph>- Phone Number: {pet.contact.phone}</Typography>
+                                                        <Typography paragraph>- Email: {pet.contact}</Typography>
+                                                        <Typography paragraph>- Phone Number: {pet.contact}</Typography>
+                                                        <Typography paragraph>Distance: {Math.floor(parseInt(pet.distance))} miles</Typography>
+                                                        </>
+                                                    ):(
+                                                        <>
+                                                        <Typography paragraph>Gender: {pet.gender}</Typography>
+                                                        <Typography paragraph>Size: {pet.size}</Typography>
+                                                        <Typography paragraph>Contact:</Typography>
+                                                        <Typography paragraph>- Email: {pet.contact}</Typography>
+                                                        <Typography paragraph>- Phone Number: {pet.contact}</Typography>
                                                         <Typography paragraph>Distance: {Math.floor(parseInt(pet.distance))} miles</Typography>
                                                         </>
                                                     )}

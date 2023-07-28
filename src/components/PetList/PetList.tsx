@@ -44,7 +44,10 @@ export interface Pet {
     }[];
     description: string;
     breeds: {
+        mixed: boolean;
         primary: string;
+        secondary: string;
+        unknown: boolean;
     };
     gender: string;
     age: string;
@@ -56,13 +59,7 @@ export interface Pet {
     };
 }
 
-
-interface PetListProps {
-    favoritePets: Pet[]
-    onFavoriteClick: (petId:string) => void;
-}
-
-export const PetList: React.FC<PetListProps> = ({ onFavoriteClick }) => {
+export const PetList = () => {
     const location = useLocation()
     const navigate = useNavigate()
     const searchParams = new URLSearchParams(location.search)
@@ -93,11 +90,10 @@ export const PetList: React.FC<PetListProps> = ({ onFavoriteClick }) => {
         } else {
             const selectedPet = pets.find((pet) => pet.name === petName)
 
-            if (selectedPet) {
                 if (selectedPet) {
                     const newPet = {
                         name: selectedPet.name,
-                        photos: JSON.parse(selectedPet.photos[0].medium),
+                        photos: selectedPet.photos[0].medium,
                         description: selectedPet.description,
                         breeds: selectedPet.breeds.primary,
                         gender: selectedPet.gender,
@@ -107,6 +103,7 @@ export const PetList: React.FC<PetListProps> = ({ onFavoriteClick }) => {
                         contact: selectedPet.contact.email || selectedPet.contact.phone
                     }
                     console.log(newPet)
+                    
                 
                 try {
                     await serverCalls.create(newPet)
@@ -117,7 +114,7 @@ export const PetList: React.FC<PetListProps> = ({ onFavoriteClick }) => {
                 }
             }}
         }
-    }
+    
 
 
     const generatePageNumber = (totalPages: number) => {
@@ -216,9 +213,6 @@ export const PetList: React.FC<PetListProps> = ({ onFavoriteClick }) => {
         getPets();
     }, [ zipCode, petType, currentPage ]);
 
-    useEffect(() => {
-        localStorage.setItem('favoritePets', JSON.stringify(favoritePetsList))
-    }, [favoritePetsList])
 
     return (
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

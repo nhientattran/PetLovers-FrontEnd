@@ -1,6 +1,6 @@
 import { Pet } from "../components";
 
-let token = 'bd8599d97dad6f96062cd8d4e6579a0d4bd502fcd5bd8e41'
+let token = 'b2a33cc55e77175533ac0645d822e5c0f64cde7f8635c5f2'
 
 export const serverCalls = {
     get: async() => {
