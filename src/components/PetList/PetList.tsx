@@ -59,6 +59,18 @@ export interface Pet {
     };
 }
 
+export interface NewPet {
+    name: string;
+    photos: string;
+    description: string;
+    breeds: string;
+    gender: string;
+    age: string;
+    size: string;
+    distance: string;
+    contact: string;
+  }
+
 export const PetList = () => {
     const location = useLocation()
     const navigate = useNavigate()
@@ -91,7 +103,7 @@ export const PetList = () => {
             const selectedPet = pets.find((pet) => pet.name === petName)
 
                 if (selectedPet) {
-                    const newPet = {
+                    const newPet: NewPet = {
                         name: selectedPet.name,
                         photos: selectedPet.photos[0].medium,
                         description: selectedPet.description,
@@ -100,8 +112,9 @@ export const PetList = () => {
                         age: selectedPet.age,
                         size: selectedPet.size,
                         distance: selectedPet.distance,
-                        contact: selectedPet.contact.email || selectedPet.contact.phone
-                    }
+                        contact: selectedPet.contact.email,
+                      };
+                      
                     console.log(newPet)
                     
                 

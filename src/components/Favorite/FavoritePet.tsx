@@ -37,6 +37,7 @@ import { fetchPets } from '../../api';
 import { serverCalls } from '../../api';
 
 interface FavoritePetProps {
+    id: string;
     name: string;
     photos: {
         medium: string;
@@ -78,20 +79,15 @@ export const FavoritePet: React.FC<FavoritePetProps> = () => {
         setOpen(false)
     }
 
-    const handleDeleteClick = async (petName: string) => {
-        const isFavorite = favoritePets.some((pet) => pet.name === petName);
+    const handleDeleteClick = async (id: string) => {
+        const isFavorite = favoritePets.some((pet) => pet.id === id);
     
         if (isFavorite) {
-            const updatedFavoritePets = favoritePets.filter(
-                (pet) => pet.name !== petName
-            );
-            setFavoritePets(updatedFavoritePets);
-    
             try {
-                await serverCalls.delete(petName);
-                console.log(`Pet ${petName} removed from favorites.`);
+                await serverCalls.delete(id);
+                console.log(`Pet ${id} removed from favorites.`);
                 setFavoritePets((prevFavoritePets) => 
-                    prevFavoritePets.filter((pet) => pet.name !== petName)
+                    prevFavoritePets.filter((pet) => pet.id !== id)
                 );
             } catch (error) {
                 console.log('Failed to remove favorite pet:', error);
@@ -227,8 +223,8 @@ export const FavoritePet: React.FC<FavoritePetProps> = () => {
                                             <CardActions disableSpacing>
                                                 <IconButton 
                                                     aria-label='remove from favorites' 
-                                                        onClick={() => handleDeleteClick(pet.name)} >
-                                                        {favoritePets.some((favoritePet) => favoritePet.name === pet.name) ? (
+                                                        onClick={() => handleDeleteClick(pet.id)} >
+                                                        {favoritePets.some((favoritePet) => favoritePet.id === pet.id) ? (
                                                             <FavoriteIcon color='error' />
                                                         ):(
                                                             <FavoriteIcon />

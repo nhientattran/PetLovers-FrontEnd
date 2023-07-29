@@ -25,8 +25,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                         <Route path='/dashboard' element={<Dashboard />} />
                         <Route path='/signin' element={<SignIn />} />
                         <Route path='/signup' element={<SignUp />} />
-                        <Route path='/petlist' element={<PetList favoritePets={[]} onFavoriteClick={() => {}} />} />
-                        <Route path='/favorite' element={<FavoritePet pets={[]} />} />
+                        <Route path='/petlist' element={<PetList />} />
+                        <Route path='/favorite' element={<FavoritePet id={''} name={''} photos={[]} description={''} breeds={{
+                            primary: '',
+                            secondary: ''
+                        }} gender={''} age={''} size={''} distance={''} contact={''} />} />
                     </Routes>
                 </Router>
             </ThemeProvider>

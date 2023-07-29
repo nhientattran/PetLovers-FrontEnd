@@ -1,4 +1,4 @@
-import { Pet } from "../components";
+import { NewPet} from "../components";
 
 let token = 'b2a33cc55e77175533ac0645d822e5c0f64cde7f8635c5f2'
 
@@ -19,7 +19,7 @@ export const serverCalls = {
         return await response.json()
     },
 
-    create: async(data: Pet) => {
+    create: async(data: NewPet) => {
         const response = await fetch(`https://petlovers2.glitch.me/api/pets`, {
             method:'POST',
             headers: {
@@ -35,8 +35,8 @@ export const serverCalls = {
         }
     },
 
-    delete: async(name:string) => {
-        const response = await fetch(`https://petlovers2.glitch.me/api/pets/${name}`, {
+    delete: async(id:string) => {
+        const response = await fetch(`https://petlovers2.glitch.me/api/pets/${id}`, {
             method:'DELETE',
             headers: {
                 'Content-Type': 'application/json',
